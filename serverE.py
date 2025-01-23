@@ -26,7 +26,6 @@ def main():
         raise KeyError("La configurazione del server deve contenere le chiavi 'address' e 'port'")
     
     server_coords = (server_config["server"]["address"], server_config["server"]["port"])
-    ticket_validity_duration = server_config["ticket"]["validity_duration"]
     
     # Crea un socket per il server
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -55,9 +54,9 @@ def main():
             
             # Inserimento dell'utente nel database
             cursor.execute("""
-                INSERT INTO utenti_registrati (nome, cognome, email, password, data_validita)
-                VALUES (?, ?, ?, ?, DATE('now', ? || ' days'))
-            """, (nome, cognome, email, password, ticket_validity_duration))
+                INSERT INTO utenti_registrati (nome, cognome, email, password)
+                VALUES (?, ?, ?, ?)
+            """, (nome, cognome, email, password))
             
             conn.commit()
             conn.close()

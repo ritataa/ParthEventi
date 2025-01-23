@@ -1,7 +1,7 @@
 # Contenuto di main.py
 
 import json
-from server.serverE import start_server
+from serverE import start_server
 
 def load_server_config():
     with open('server_address.json') as config_file:

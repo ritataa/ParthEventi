@@ -1,25 +1,60 @@
-import requests
 import json
+import os
+import sqlite3
+import sys
+
+from PyQt5.QtWidgets import QMessageBox, QDialog, QHBoxLayout, QLabel, QPushButton
+
+# Aggiungi il percorso del modulo SelMultiplexClient.py al PYTHONPATH
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from SelMultiplexClient import launchMethod
+from common.communication import request_constructor_str, loadJSONFromFile
+
+ROOT_DIR = os.path.abspath(os.curdir)
+DB_PATH = os.path.join(ROOT_DIR, 'db', 'database.db')
+
+server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+SERVER_ADDRESS = server_coords['address']
+SERVER_PORT = server_coords['port']
+
+def init_db():
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS utenti_registrati (
+            id_utente INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            cognome TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            data_registrazione DATE DEFAULT CURRENT_DATE,
+            data_validita DATE NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
 
 def check_ticket_validity(ticket_id):
-    with open('../server_address.json') as config_file:
-        config = json.load(config_file)
+    payload = {
+        "ticket_id": ticket_id
+    }
+    request_data = request_constructor_str(payload, "validate")
+    response = launchMethod(request_data, SERVER_ADDRESS, SERVER_PORT)
+    return json.loads(response)
+
+def main():
+    init_db()
+    print("Verifica Validità Tessere")
+    ticket_id = input("Inserisci l'ID della tessera da controllare: ")
     
-    server_address = config['server']['address']
-    server_port = config['server']['port']
-    url = f'http://{server_address}:{server_port}/check_ticket'
-
-    response = requests.post(url, json={'ticket_id': ticket_id})
-
-    if response.status_code == 200:
-        result = response.json()
-        if result['valid']:
-            print(f"La tessera {ticket_id} è valida.")
-        else:
-            print(f"La tessera {ticket_id} non è valida.")
+    result = check_ticket_validity(ticket_id)
+    print("Risultato della verifica:", result)
+    
+    if result["status"] == "success":
+        print(f"La tessera {ticket_id} è valida.")
     else:
-        print("Errore nella comunicazione con il server.")
+        print(f"La tessera {ticket_id} non è valida.")
 
 if __name__ == "__main__":
-    ticket_id = input("Inserisci l'ID della tessera da controllare: ")
-    check_ticket_validity(ticket_id)
+    main()

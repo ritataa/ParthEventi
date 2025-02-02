@@ -40,7 +40,12 @@ Questo progetto ha lo scopo di gestire le tessere di accesso per vari eventi. In
     ```
 
 ## Utilizzo
-Esegui il file `main.py` per avviare l'applicazione:
+
+Esegui il file `serverE.py` per avviare il server
+```sh
+python serverE.py
+```
+In un terminale diviso, con il server in ascolto, esegui il file `main.py` per avviare l'applicazione:
 ```sh
 python main.py
 ```

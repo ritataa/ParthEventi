@@ -28,11 +28,11 @@ Questo progetto ha lo scopo di gestire le tessere di accesso per vari eventi. In
 ## Istruzioni per l'Installazione
 1. Clona il repository:
     ```sh
-    git clone <repository_url>
+    git clone https://github.com/ritataa/ParthEventi.git
     ```
 2. Naviga nella directory del progetto:
     ```sh
-    cd gestione-tessere-eventi
+    cd ParthEventi
     ```
 3. Installa le dipendenze:
     ```sh

@@ -21,9 +21,9 @@ Questo progetto ha lo scopo di gestire le tessere di accesso per vari eventi. In
 
 - `main.py`: Punto di ingresso dell'applicazione, inizializza il server e ascolta le richieste in arrivo.
 
-- `server_address.json`: Configurazione del server, inclusi indirizzo, numero di porta e durata di validità delle tessere.
+- `server_address.json`: Configurazione del server, inclusi indirizzo e numero di porta.
 
-- `requirements.txt`: Elenco delle dipendenze necessarie per il progetto, come PyQt5 e PyQt6.
+- `requirements.txt`: Elenco delle dipendenze necessarie per il progetto.
 
 ## Istruzioni per l'Installazione
 1. Clona il repository:

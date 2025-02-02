@@ -44,8 +44,8 @@ def register_user(payload):
         
         # Inserisci il nuovo utente
         cursor.execute("""
-        INSERT INTO utenti_registrati (nome, cognome, email, password, data_validita, id_tessera)
-        VALUES (?, ?, ?, ?, DATE('now', '+1 year'), ?)
+        INSERT INTO utenti_registrati (nome, cognome, email, password, data_validita, id_tessera, isAttivo)
+        VALUES (?, ?, ?, ?, DATE('now', '+1 year'), ?, 1)
         """, (payload['name'], payload['surname'], payload['email'], payload['password'], payload['card_id']))
         
         conn.commit()
@@ -61,20 +61,20 @@ def validate_user(payload):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    cursor.execute("SELECT * FROM utenti_registrati WHERE id_tessera = ?", (payload['card_id'],))
+    cursor.execute("SELECT * FROM utenti_registrati WHERE id_tessera = ? AND isAttivo = 1", (payload['card_id'],))
     user = cursor.fetchone()
     conn.close()
     
     if user:
         return {"status": "success", "message": "Tessera valida", "data_validita": user[6]}
     else:
-        return {"status": "error", "message": "Tessera non trovata"}
+        return {"status": "error", "message": "Tessera non trovata o utente non attivo"}
 
 def suspend_user(payload):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     
-    cursor.execute("UPDATE utenti_registrati SET data_validita = DATE('now', '-1 day') WHERE email = ?", (payload['email'],))
+    cursor.execute("UPDATE utenti_registrati SET isAttivo = 0 WHERE email = ?", (payload['email'],))
     conn.commit()
     
     # Verifica il contenuto del database per debug
@@ -89,9 +89,8 @@ def suspend_user(payload):
 def activate_user(payload):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    validity_duration = 30  # Durata di validità delle tessere in giorni
     
-    cursor.execute("UPDATE utenti_registrati SET data_validita = DATE('now', ? || ' days') WHERE email = ?", (validity_duration, payload['email']))
+    cursor.execute("UPDATE utenti_registrati SET isAttivo = 1 WHERE email = ?", (payload['email'],))
     conn.commit()
     
     # Verifica il contenuto del database per debug

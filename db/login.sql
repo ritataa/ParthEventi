@@ -6,5 +6,6 @@ CREATE TABLE IF NOT EXISTS utenti_registrati (
     password TEXT NOT NULL,
     data_registrazione DATE DEFAULT CURRENT_DATE,
     data_validita DATE NOT NULL,
-    id_tessera TEXT NOT NULL UNIQUE
+    id_tessera TEXT NOT NULL UNIQUE,
+    isAttivo INTEGER DEFAULT 1
 );

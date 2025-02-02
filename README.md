@@ -14,8 +14,8 @@ Questo progetto ha lo scopo di gestire le tessere di accesso per vari eventi. In
   - `clientO.py`: Funzionalità per sospendere o attivare l'accesso per un partecipante.
   - `clientC.py`: Funzionalità per controllare la validità delle tessere di accesso.
   
-- `server/`: Contiene il file del server per gestire le richieste dei client.
-  - `serverE.py`: Logica principale del server per gestire le tessere e le richieste dei client.
+
+- `serverE.py`: Logica principale del server per gestire le tessere e le richieste dei client.
 
 - `db/`: Directory per i file relativi al database, come la gestione della connessione e i modelli di dati.
 

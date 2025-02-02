@@ -11,10 +11,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from SelMultiplexClient import launchMethod
 from common.communication import request_constructor_str, loadJSONFromFile
 
-ROOT_DIR = os.path.abspath(os.curdir)
-DB_PATH = os.path.join(ROOT_DIR, 'db', 'database.db')
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(ROOT_DIR, '..', 'db', 'database.db')
 
-server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "server_address.json"))
+server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "..", "server_address.json"))
 SERVER_ADDRESS = server_coords['address']
 SERVER_PORT = server_coords['port']
 
@@ -29,7 +29,8 @@ def init_db():
             email TEXT NOT NULL UNIQUE,
             password TEXT NOT NULL,
             data_registrazione DATE DEFAULT CURRENT_DATE,
-            data_validita DATE NOT NULL
+            data_validita DATE NOT NULL,
+            id_tessera TEXT NOT NULL UNIQUE
         )
     """)
     conn.commit()
@@ -37,7 +38,7 @@ def init_db():
 
 def check_ticket_validity(ticket_id):
     payload = {
-        "ticket_id": ticket_id
+        "card_id": ticket_id
     }
     request_data = request_constructor_str(payload, "validate")
     response = launchMethod(request_data, SERVER_ADDRESS, SERVER_PORT)

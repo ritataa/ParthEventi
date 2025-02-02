@@ -8,6 +8,8 @@ Un ClientC consente di verificare la validità delle tessere. Un ClientO consent
 ## Descrizione
 Questo progetto ha lo scopo di gestire le tessere di accesso per vari eventi. Include funzionalità per creare, aggiornare, eliminare e visualizzare le tessere di accesso.
 
+Il progetto utilizza un server concorrente. Il file serverE.py utilizza ThreadedTCPServer per gestire le richieste in arrivo, il che dimostra l'uso di un server concorrente. ThreadedTCPServer è una classe che eredita da socketserver.ThreadingMixIn e socketserver.TCPServer, il che significa che ogni richiesta in arrivo viene gestita in un thread separato. Questo permette al server di gestire più connessioni contemporaneamente.
+
 ## Struttura del Progetto
 - `client/`: Contiene i file del client per la registrazione, la verifica e la gestione delle tessere.
   - `client.py`: Logica principale del client per la registrazione dei partecipanti.

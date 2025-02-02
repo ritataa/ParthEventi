@@ -61,8 +61,10 @@ def main():
     
     if action == "sospendere":
         result = suspend_user_access(email)
+        action_past = "sospeso"
     elif action == "attivare":
         result = activate_user_access(email)
+        action_past = "attivato"
     else:
         print("Azione non valida.")
         return
@@ -70,7 +72,7 @@ def main():
     print("Risultato dell'operazione:", result)
     
     if result["status"] == "success":
-        print(f"L'accesso per l'utente con email {email} è stato {action} con successo.")
+        print(f"L'accesso per l'utente con email {email} è stato {action_past} con successo.")
     else:
         print(f"Errore nell'operazione: {result['message']}")
 

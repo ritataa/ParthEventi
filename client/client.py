@@ -17,7 +17,6 @@ from common.communication import request_constructor_str, loadJSONFromFile
 # Imposta il percorso del database relativo alla posizione di questo script
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(ROOT_DIR, '..', 'db', 'database.db')
-print(f"Percorso del database: {DB_PATH}")  # Aggiungi questa riga per il debug
 
 server_coords = loadJSONFromFile(os.path.join(ROOT_DIR, "..", "server_address.json"))
 SERVER_ADDRESS = server_coords['address']
@@ -63,11 +62,8 @@ def register_participant(name, surname, email, password):
         "card_id": card_id
     }
     request_data = request_constructor_str(payload, "register")
-    print(f"Request data: {request_data}")  # Aggiungi questa riga per il debug
     response = launchMethod(request_data, SERVER_ADDRESS, SERVER_PORT)
-    print(f"Risposta dal server: {response}")  # Aggiungi questa riga per il debug
     if not response:
-        print("Errore: Risposta vuota dal server")
         return {"status": "error", "message": "Risposta vuota dal server"}, card_id
     return json.loads(response), card_id
 
@@ -83,9 +79,8 @@ def save_credentials_to_db(name, surname, email, password, card_id):
         """, (name, surname, email, password, card_id))
         
         conn.commit()
-        print(f"Utente {email} registrato con successo nel database locale")
     except sqlite3.IntegrityError as e:
-        print(f"Errore di integrità del database: {e}")
+        pass
     finally:
         conn.close()
 

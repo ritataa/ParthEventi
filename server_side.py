@@ -23,23 +23,16 @@ def register_user(payload):
     cursor = conn.cursor()
     
     try:
-        # Verifica il contenuto del database per debug
-        cursor.execute("SELECT * FROM utenti_registrati")
-        all_users = cursor.fetchall()
-        print("Utenti attualmente registrati:", all_users)
-        
         # Verifica se l'utente esiste già
         cursor.execute("SELECT * FROM utenti_registrati WHERE email = ?", (payload['email'],))
         user = cursor.fetchone()
         if user:
-            print(f"Errore: L'utente con email {payload['email']} esiste già")
             return {"status": "error", "message": "User already exists"}
         
         # Verifica se l'ID tessera esiste già
         cursor.execute("SELECT * FROM utenti_registrati WHERE id_tessera = ?", (payload['card_id'],))
         card = cursor.fetchone()
         if card:
-            print(f"Errore: L'ID tessera {payload['card_id']} esiste già")
             return {"status": "error", "message": "Card ID already exists"}
         
         # Inserisci il nuovo utente
@@ -49,10 +42,8 @@ def register_user(payload):
         """, (payload['name'], payload['surname'], payload['email'], payload['password'], payload['card_id']))
         
         conn.commit()
-        print(f"Utente {payload['email']} registrato con successo")
         return {"status": "success", "message": "User registered successfully"}
     except sqlite3.IntegrityError as e:
-        print(f"Errore di integrità del database: {e}")
         return {"status": "error", "message": "Database integrity error"}
     finally:
         conn.close()
@@ -76,12 +67,6 @@ def suspend_user(payload):
     
     cursor.execute("UPDATE utenti_registrati SET isAttivo = 0 WHERE email = ?", (payload['email'],))
     conn.commit()
-    
-    # Verifica il contenuto del database per debug
-    cursor.execute("SELECT * FROM utenti_registrati")
-    all_users = cursor.fetchall()
-    print("Utenti attualmente registrati:", all_users)
-    
     conn.close()
     
     return {"status": "success", "message": "Accesso sospeso"}
@@ -92,12 +77,6 @@ def activate_user(payload):
     
     cursor.execute("UPDATE utenti_registrati SET isAttivo = 1 WHERE email = ?", (payload['email'],))
     conn.commit()
-    
-    # Verifica il contenuto del database per debug
-    cursor.execute("SELECT * FROM utenti_registrati")
-    all_users = cursor.fetchall()
-    print("Utenti attualmente registrati:", all_users)
-    
     conn.close()
     
     return {"status": "success", "message": "Accesso attivato"}
